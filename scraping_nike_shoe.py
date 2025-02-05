@@ -1,4 +1,30 @@
 import scrapy
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+import time
+
+# Set up ChromeDriver
+chrome_driver_path = r"C:\Users\Копринков\chromedriver-win64\chromedriver.exe"
+service = Service(chrome_driver_path)
+driver = webdriver.Chrome(service=service)
+
+# Open the webpage
+driver.get("https://www.academy.com/p/nike-womens-court-legacy-next-nature-shoes?sku=white-black01-6-5-b")
+
+# Allow time for JavaScript to load
+time.sleep(5)  # Alternatively, use WebDriverWait
+
+# Correct usage of By.CSS_SELECTOR
+selector = ".titleAndAttributes--ub3i5"
+elements = driver.find_elements(By.CSS_SELECTOR, selector)
+
+
+for element in elements:
+    print(element.text)
+
+
+driver.quit()
 
 
 class NikeShoesSpider(scrapy.Spider):
@@ -27,5 +53,3 @@ class NikeShoesSpider(scrapy.Spider):
             # 'reviews_score': reviews_score,
             # 'availableColours': available_colours,
         }
-
-
