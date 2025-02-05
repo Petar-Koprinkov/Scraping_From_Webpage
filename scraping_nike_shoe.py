@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import json
 
 chrome_driver_path = r"C:\Users\Копринков\chromedriver-win64\chromedriver.exe"
 service = Service(chrome_driver_path)
@@ -12,38 +13,24 @@ driver = webdriver.Chrome(service=service)
 driver.get("https://www.academy.com/p/nike-womens-court-legacy-next-nature-shoes?sku=white-black01-6-5-b")
 driver.implicitly_wait(60)
 
-
-selector = ".titleAndAttributes--ub3i5"
-elements = WebDriverWait(driver, 60).until(
+selector = ".wrapper--VuqBA:nth-child(1) .focusable , .productTitle--FWmyK , .lg , .textCaption , #pdpContentWrapper .smallLink , .horizontalBorder--Npbxe .swatchName--KWu4Q"
+elements = WebDriverWait(driver, 100).until(
     EC.presence_of_all_elements_located((By.CSS_SELECTOR, selector))
 )
 
+result = [element.text.strip() for element in elements if element.text.strip()]
 
-for element in elements:
-    print(element.text)
+final_result = {
+    'name': result[0],
+    'price': result[1],
+    'colour': result[4],
+    "reviews_count": int(result[3].strip("()")),
+    "reviews_score": float(result[2]),
+}
 
+with open("product_details.json", "w", encoding="utf-8") as json_file:
+    json.dump(final_result, json_file, ensure_ascii=False, indent=4)
+
+print(final_result)
 
 driver.quit()
-
-# class NikeShoesSpider(scrapy.Spider):
-#     name = 'nike_shoes'
-#     start_urls = ['https://www.academy.com/p/nike-womens-court-legacy-next-nature-shoes']
-#     def parse(self, response):
-#         product_name = response.xpath('//h1[@class=" productTitle--FWmyK"]/text()').get().strip()
-#         price = response.xpath('//span[@class="pricing nowPrice lg"]/text()').get().strip().replace('$', '')
-#         """
-#         Selecting dynamically-loaded content
-#         """
-#         # colour = response.xpath('//span[@class="swatchName--KWu4Q"][2]/text()').get()
-#         # review_count = response.xpath('//button[@class="ratingCount linkBtn focusable smallLink"]/text()').get()
-#         # reviews_score = response.xpath('//span[@class="ratingAvg textCaption"]/text()').get()
-#         # available_colours = response.xpath('//div[@class="Color-selection-name"]/text()').getall()
-#         # available_colours = [colour.strip() for colour in available_colours if colour.strip()]
-#         yield {
-#             'product_name': product_name,
-#             'price': float(price),
-#             # 'colour': colour,
-#             # 'review_count': review_count,
-#             # 'reviews_score': reviews_score,
-#             # 'availableColours': available_colours,
-#         }
