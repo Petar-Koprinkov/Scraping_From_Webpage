@@ -14,7 +14,7 @@ driver.get("https://www.academy.com/p/nike-womens-court-legacy-next-nature-shoes
 driver.implicitly_wait(60)
 
 selector = ".wrapper--VuqBA:nth-child(1) .focusable , .productTitle--FWmyK , .lg , .textCaption , #pdpContentWrapper .smallLink , .horizontalBorder--Npbxe .swatchName--KWu4Q"
-elements = WebDriverWait(driver, 100).until(
+elements = WebDriverWait(driver, 60).until(
     EC.presence_of_all_elements_located((By.CSS_SELECTOR, selector))
 )
 
@@ -22,7 +22,7 @@ result = [element.text.strip() for element in elements if element.text.strip()]
 print(result)
 final_result = {
     'name': result[0],
-    'price': result[1],
+    'price': float(result[1].strip('$')),
     'colour': result[4],
     "reviews_count": int(result[3].strip("()")),
     "reviews_score": float(result[2]),
