@@ -19,7 +19,7 @@ elements = WebDriverWait(driver, 100).until(
 )
 
 result = [element.text.strip() for element in elements if element.text.strip()]
-
+print(result)
 final_result = {
     'name': result[0],
     'price': result[1],
