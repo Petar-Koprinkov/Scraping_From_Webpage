@@ -13,13 +13,14 @@ driver = webdriver.Chrome(service=service)
 driver.get("https://www.academy.com/p/nike-womens-court-legacy-next-nature-shoes?sku=white-black01-6-5-b")
 driver.implicitly_wait(60)
 
-selector = ".wrapper--VuqBA:nth-child(1) .focusable , .productTitle--FWmyK , .lg , .textCaption , #pdpContentWrapper .smallLink , .horizontalBorder--Npbxe .swatchName--KWu4Q"
+selector = ('.textCaption , #pdpContentWrapper .smallLink , #pdpContentWrapper .lg , .horizontalBorder--Npbxe '
+            '.swatchName--KWu4Q , .productTitle--FWmyK')
 elements = WebDriverWait(driver, 60).until(
     EC.presence_of_all_elements_located((By.CSS_SELECTOR, selector))
 )
 
 result = [element.text.strip() for element in elements if element.text.strip()]
-print(result)
+
 final_result = {
     'name': result[0],
     'price': float(result[1].strip('$')),
